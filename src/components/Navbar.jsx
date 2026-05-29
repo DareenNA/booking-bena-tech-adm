@@ -18,23 +18,9 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'About', path: '/#about' },
-    { name: 'Services', path: '/services' },
-    { name: 'Portfolio', path: '/portfolio' }
+    { name: 'About', path: '/about' },
+    { name: 'Services', path: '/services' }
   ];
-
-  // Helper to handle smooth scrolling to hash links
-  const handleHashLink = (e, path) => {
-    if (path.startsWith('/#')) {
-      if (location.pathname === '/') {
-        e.preventDefault();
-        const element = document.getElementById(path.replace('/#', ''));
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    }
-  };
 
   return (
     <>
@@ -49,20 +35,18 @@ const Navbar = () => {
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '24px', height: '24px', background: 'var(--text-white)', borderRadius: '4px' }}></div>
-            <span style={{ fontSize: '1.1rem', fontWeight: 600, letterSpacing: '-0.02em' }}>Bena Tech</span>
+          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.png" alt="BENA" style={{ height: '28px', objectFit: 'contain' }} />
           </Link>
 
           {/* Desktop Nav */}
           <div className="d-none d-md-flex" style={{ display: 'none', gap: '2.5rem', alignItems: 'center' }}>
             {navLinks.map((item) => {
-              const isActive = location.pathname === item.path || (location.pathname === '/' && item.path === '/#about' && window.location.hash === '#about');
+              const isActive = location.pathname === item.path;
               return (
                 <Link 
                   key={item.name} 
                   to={item.path} 
-                  onClick={(e) => handleHashLink(e, item.path)}
                   style={{ 
                     fontWeight: 500, 
                     fontSize: '0.9rem', 

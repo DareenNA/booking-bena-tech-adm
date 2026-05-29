@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Services from './pages/Services';
-import Portfolio from './pages/Portfolio';
 import Booking from './pages/Booking';
 import './index.css';
 
@@ -20,9 +19,8 @@ function App() {
       <Navbar />
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<Home />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/booking" element={<Booking />} />
         </Routes>
       </main>

@@ -20,22 +20,9 @@ const Home = () => {
       <div className="ambient-light"></div>
 
       {/* Hero Section */}
-      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '80px', position: 'relative' }}>
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '160px', position: 'relative' }}>
         <div className="container" style={{ textAlign: 'center', zIndex: 2 }}>
-          <div className="reveal-up" style={{ 
-            display: 'inline-block', 
-            padding: '6px 16px', 
-            borderRadius: '100px', 
-            border: '1px solid var(--border-color)', 
-            marginBottom: '2rem',
-            fontSize: '0.85rem',
-            fontWeight: 500,
-            color: 'var(--text-grey)',
-            backdropFilter: 'blur(10px)'
-          }}>
-            Bena Tech 2.0
-          </div>
-          
+
           <h1 className="display-1 reveal-up" style={{ marginBottom: '1.5rem', maxWidth: '900px', margin: '0 auto 1.5rem auto' }}>
             We architect the digital infrastructure your business stands on.
           </h1>
@@ -46,7 +33,7 @@ const Home = () => {
           
           <div className="reveal-up" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <Link to="/booking" className="btn btn-primary">Book a Meeting</Link>
-            <Link to="/portfolio" className="btn btn-secondary">See Our Work</Link>
+            <Link to="/services" className="btn btn-secondary">Our Services</Link>
           </div>
         </div>
 
@@ -147,6 +134,10 @@ const Home = () => {
 
             {/* Bento 2: Mobile */}
             <div className="bento-card" style={{ gridColumn: 'span 5', minHeight: '400px' }}>
+              <div className="bento-image-wrap">
+                <img src="/assets/benatech_mobile_1200x600.png" alt="Mobile Apps" />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%)' }}></div>
+              </div>
               <div className="bento-content" style={{ justifyContent: 'flex-end' }}>
                 <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Mobile Apps</h3>
                 <p style={{ color: 'var(--text-grey)', fontSize: '1.1rem' }}>Native experiences that users actually want to use.</p>
@@ -166,6 +157,16 @@ const Home = () => {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* Contact Email Section */}
+      <section style={{ padding: '6rem 0 8rem 0', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+        <div className="container">
+          <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1.2rem' }}>Direct Line</p>
+          <a href="mailto:info@bena-tech.com" style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
+            info@bena-tech.com
+          </a>
         </div>
       </section>
 

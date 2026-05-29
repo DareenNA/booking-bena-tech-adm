@@ -56,7 +56,7 @@ const Booking = () => {
           </div>
           <div>
             <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Direct Line</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>hello@benatech.io</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>info@bena-tech.com</p>
           </div>
         </div>
       </div>
