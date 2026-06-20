@@ -104,6 +104,24 @@ const Services = () => {
              </div>
           </div>
 
+          {/* ERP as a Service */}
+          <div className="bento-card" style={{ gridColumn: 'span 12', padding: '4rem' }}>
+             <div className="grid md:grid-cols-2 gap-3" style={{ direction: 'rtl' }}>
+               <div style={{ direction: 'ltr' }}>
+                  <div className="bento-image-wrap" style={{ position: 'relative', height: '400px', borderRadius: '16px', marginBottom: '2rem', overflow: 'hidden' }}>
+                  <img src="/assets/benatech_erp_1200x600.png" alt="ERP Integration" style={{ opacity: 0.8 }} />
+                  </div>
+                  <h2 className="display-2" style={{ marginBottom: '1rem' }}>ERP as a Service</h2>
+                  <p className="text-grey" style={{ fontSize: '1.1rem' }}>Connected enterprise systems that streamline workflows.</p>
+               </div>
+               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', direction: 'ltr' }}>
+                  <ExpandableRow title="ERP Implementation & Customization" desc="Tailoring platforms (Odoo, ERPNext, SAP) to align with your proprietary business flows." />
+                  <ExpandableRow title="Custom Module Development" desc="Creating bespoke modules, inventory trackers, reporting engines, and specific APIs." />
+                  <ExpandableRow title="Data Migration & Maintenance" desc="Ensuring secure database migration, schema alignment, system integrity, and ongoing support." />
+               </div>
+             </div>
+          </div>
+
         </div>
       </div>
     </div>
