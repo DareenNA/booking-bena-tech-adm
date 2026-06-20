@@ -160,13 +160,24 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Contact Email Section */}
+      {/* Contact Section */}
       <section style={{ padding: '6rem 0 8rem 0', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
-        <div className="container">
-          <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1.2rem' }}>Direct Line</p>
-          <a href="mailto:info@bena-tech.com" style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
-            info@bena-tech.com
-          </a>
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '3rem', alignItems: 'center' }}>
+          
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.8rem' }}>Email us</p>
+            <a href="mailto:info@bena-tech.com" style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
+              info@bena-tech.com
+            </a>
+          </div>
+
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.8rem' }}>WhatsApp</p>
+            <a href="https://wa.me/966502600558" target="_blank" rel="noopener noreferrer" style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
+              +966 50 260 0558
+            </a>
+          </div>
+
         </div>
       </section>
 
