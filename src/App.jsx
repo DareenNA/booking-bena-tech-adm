@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Services from './pages/Services';
@@ -19,6 +19,7 @@ function App() {
       <Navbar />
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
+          <Route path="/" element={<Navigate to="/about" replace />} />
           <Route path="/about" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/booking" element={<Booking />} />
