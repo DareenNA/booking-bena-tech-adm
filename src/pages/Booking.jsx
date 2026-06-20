@@ -137,7 +137,7 @@ const Booking = () => {
         </div>
 
         <div style={{ position: 'relative', zIndex: 1, marginTop: '80px' }}>
-          <h1 className="display-1 reveal-up" style={{ marginBottom: '1rem' }}>Initiate Protocol.</h1>
+          <h1 className="display-1 reveal-up" style={{ marginBottom: '1rem' }}>Book a meeting.</h1>
           <p className="text-grey reveal-up" style={{ fontSize: '1.2rem', maxWidth: '400px', lineHeight: 1.6 }}>
             Schedule a technical alignment with our architecture team. We don't do sales pitches, we architect solutions.
           </p>
