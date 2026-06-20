@@ -232,9 +232,10 @@ const Booking = () => {
                   style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', appearance: 'none' }}
                 >
                   <option value="" disabled style={{ background: '#000' }}>Select Primary Interest...</option>
-                  <option value="web" style={{ background: '#000' }}>Web Architecture</option>
+                  <option value="web" style={{ background: '#000' }}>Web Development</option>
+                  <option value="automation" style={{ background: '#000' }}>Business Automation</option>
                   <option value="mobile" style={{ background: '#000' }}>Mobile Systems</option>
-                  <option value="automation" style={{ background: '#000' }}>Process Automation</option>
+                  <option value="erp" style={{ background: '#000' }}>Enterprise Resource Planning</option>
                 </select>
               </div>
 
