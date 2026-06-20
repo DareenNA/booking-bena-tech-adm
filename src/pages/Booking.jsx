@@ -143,14 +143,18 @@ const Booking = () => {
           </p>
         </div>
 
-        <div className="reveal-up" style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '2rem' }}>
+        <div className="reveal-up" style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <div>
             <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Response Time</p>
             <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>&lt; 2 Hours</p>
           </div>
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Direct Line</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>info@bena-tech.com</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Email us</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="mailto:info@bena-tech.com" style={{ color: 'inherit', textDecoration: 'none' }}>info@bena-tech.com</a></p>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>WhatsApp</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://wa.me/966502600558" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>+966 50 260 0558</a></p>
           </div>
         </div>
       </div>
