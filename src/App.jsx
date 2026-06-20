@@ -1,8 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Booking from './pages/Booking';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
 const Footer = () => (
@@ -13,19 +16,36 @@ const Footer = () => (
   </footer>
 );
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!isAdminRoute && <Navbar />}
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
           <Route path="/" element={<Navigate to="/about" replace />} />
           <Route path="/about" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/booking" element={<Booking />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
-      <Footer />
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

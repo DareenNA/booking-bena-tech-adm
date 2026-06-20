@@ -1,25 +1,119 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 import gsap from 'gsap';
 
 const Booking = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  // Database States
+  const [slots, setSlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Selection States
+  const [selectedDate, setSelectedDate] = useState(null); // stores date string, e.g. '2026-06-25'
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null); // stores slot object
   const [meetingType, setMeetingType] = useState('online');
 
-  const availableDates = Array.from({ length: 5 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i + 1);
-    return d;
-  });
+  // Form States
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [interest, setInterest] = useState('');
 
-  const availableTimes = ['10:00 AM', '11:30 AM', '2:00 PM', '4:00 PM'];
+  // UI Status
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    fetchSlots();
+
     gsap.fromTo('.reveal-up', 
       { y: 30, opacity: 0 }, 
       { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
     );
   }, []);
+
+  const fetchSlots = async () => {
+    setLoading(true);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const { data, error } = await supabase
+        .from('available_slots')
+        .select('*')
+        .eq('is_booked', false)
+        .gte('date', today)
+        .order('date', { ascending: true })
+        .order('time_slot', { ascending: true });
+
+      if (error) throw error;
+      setSlots(data || []);
+    } catch (err) {
+      console.error('Error fetching slots:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Group slots by date
+  const uniqueDates = [...new Set(slots.map(slot => slot.date))];
+
+  // Times available for the selected date
+  const timesForSelectedDate = selectedDate
+    ? slots.filter(slot => slot.date === selectedDate)
+    : [];
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedTimeSlot) return;
+
+    setSubmitting(true);
+    try {
+      // 1. Insert booking record
+      const { error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          slot_id: selectedTimeSlot.id,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          interest: interest,
+          meeting_type: meetingType
+        });
+
+      if (bookingError) throw bookingError;
+
+      // 2. Mark the slot as booked
+      const { error: slotError } = await supabase
+        .from('available_slots')
+        .update({ is_booked: true })
+        .eq('id', selectedTimeSlot.id);
+
+      if (slotError) throw slotError;
+
+      setSuccess(true);
+      setTimeout(() => {
+        gsap.fromTo('.success-reveal', 
+          { scale: 0.9, opacity: 0 }, 
+          { scale: 1, opacity: 1, duration: 0.8, ease: 'power3.out' }
+        );
+      }, 50);
+
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      alert('Booking failed: ' + err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setInterest('');
+    setSelectedDate(null);
+    setSelectedTimeSlot(null);
+    setSuccess(false);
+    fetchSlots();
+  };
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)' }}>
@@ -67,68 +161,182 @@ const Booking = () => {
           
           <h2 className="reveal-up d-md-none display-2" style={{ marginBottom: '3rem' }}>Book Meeting</h2>
 
-          {/* Step 1: Details */}
-          <div className="reveal-up" style={{ marginBottom: '4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>1</div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Client Details</h3>
-            </div>
-            
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
-                <input type="text" required placeholder="First Name" style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} />
-                <input type="text" required placeholder="Last Name" style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} />
+          {success ? (
+            /* Success State */
+            <div className="success-reveal" style={{ textAlign: 'center', padding: '2rem 0' }}>
+              <div style={{ 
+                width: '72px', 
+                height: '72px', 
+                borderRadius: '50%', 
+                background: 'rgba(231, 73, 4, 0.1)', 
+                border: '1px solid var(--primary-orange)', 
+                color: 'var(--primary-orange)', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                fontSize: '2.5rem',
+                margin: '0 auto 2rem auto'
+              }}>
+                ✓
               </div>
-              
-              <input type="email" required placeholder="Work Email" style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', marginBottom: '1.5rem', transition: 'border-color 0.3s' }} />
+              <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Protocol Confirmed.</h3>
+              <p style={{ color: 'var(--text-grey)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
+                Your meeting has been locked in for <strong>{new Date(selectedTimeSlot?.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong> at <strong>{selectedTimeSlot?.time_slot}</strong> ({meetingType === 'online' ? 'Remote' : 'On-site'}). A Google Calendar invitation has been queued for your inbox.
+              </p>
+              <button onClick={resetForm} className="btn btn-secondary" style={{ padding: '0.8rem 2rem' }}>
+                Schedule Another Meeting
+              </button>
+            </div>
+          ) : (
+            /* Booking Form Flow */
+            <form onSubmit={handleBookingSubmit}>
+              {/* Step 1: Details */}
+              <div className="reveal-up" style={{ marginBottom: '4rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>1</div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Client Details</h3>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+                  <input 
+                    type="text" 
+                    required 
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First Name" 
+                    style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
+                  />
+                  <input 
+                    type="text" 
+                    required 
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last Name" 
+                    style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
+                  />
+                </div>
+                
+                <input 
+                  type="email" 
+                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Work Email" 
+                  style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', marginBottom: '1.5rem', transition: 'border-color 0.3s' }} 
+                />
 
-              <select required style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', appearance: 'none' }}>
-                <option value="" disabled selected>Select Primary Interest...</option>
-                <option value="web">Web Architecture</option>
-                <option value="mobile">Mobile Systems</option>
-                <option value="automation">Process Automation</option>
-              </select>
+                <select 
+                  required 
+                  value={interest}
+                  onChange={(e) => setInterest(e.target.value)}
+                  style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', appearance: 'none' }}
+                >
+                  <option value="" disabled style={{ background: '#000' }}>Select Primary Interest...</option>
+                  <option value="web" style={{ background: '#000' }}>Web Architecture</option>
+                  <option value="mobile" style={{ background: '#000' }}>Mobile Systems</option>
+                  <option value="automation" style={{ background: '#000' }}>Process Automation</option>
+                </select>
+              </div>
+
+              {/* Step 2: Time */}
+              <div className="reveal-up" style={{ marginBottom: '4rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>2</div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Select Availability</h3>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', padding: '0.4rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                  <button type="button" onClick={() => setMeetingType('online')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'online' ? 'var(--text-white)' : 'transparent', color: meetingType === 'online' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>Remote</button>
+                  <button type="button" onClick={() => setMeetingType('inperson')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'inperson' ? 'var(--text-white)' : 'transparent', color: meetingType === 'inperson' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>On-site</button>
+                </div>
+
+                {loading ? (
+                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem' }}>Loading open sessions...</p>
+                ) : uniqueDates.length === 0 ? (
+                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', padding: '1rem 0' }}>No available dates published at the moment. Please contact us directly at info@bena-tech.com.</p>
+                ) : (
+                  <>
+                    {/* Date horizontal selector */}
+                    <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '2rem', scrollbarWidth: 'none' }}>
+                      {uniqueDates.map((dateStr) => {
+                        const dateObj = new Date(dateStr);
+                        const isSelected = selectedDate === dateStr;
+                        return (
+                          <button 
+                            key={dateStr} 
+                            type="button"
+                            onClick={() => {
+                              setSelectedDate(dateStr);
+                              setSelectedTimeSlot(null); // Reset time when date changes
+                            }} 
+                            style={{ 
+                              minWidth: '80px', 
+                              padding: '1rem 0', 
+                              borderRadius: '12px', 
+                              border: `1px solid ${isSelected ? 'var(--primary-orange)' : 'var(--border-color)'}`, 
+                              background: isSelected ? 'rgba(231,73,4,0.1)' : 'transparent', 
+                              color: isSelected ? 'var(--primary-orange)' : 'var(--text-white)', 
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              alignItems: 'center', 
+                              gap: '8px', 
+                              cursor: 'pointer', 
+                              transition: 'all 0.2s' 
+                            }}
+                          >
+                            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>{dateObj.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                            <span style={{ fontSize: '1.4rem', fontWeight: 500 }}>{dateObj.getDate()}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+
+                    {/* Time slots selector */}
+                    <div style={{ opacity: selectedDate !== null ? 1 : 0.3, pointerEvents: selectedDate !== null ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                        {timesForSelectedDate.map((slot) => {
+                          const isSelected = selectedTimeSlot?.id === slot.id;
+                          return (
+                            <button 
+                              key={slot.id} 
+                              type="button"
+                              onClick={() => setSelectedTimeSlot(slot)} 
+                              style={{ 
+                                padding: '1.2rem', 
+                                borderRadius: '12px', 
+                                border: `1px solid ${isSelected ? 'var(--primary-orange)' : 'var(--border-color)'}`, 
+                                background: isSelected ? 'var(--primary-orange)' : 'transparent', 
+                                color: 'var(--text-white)', 
+                                cursor: 'pointer', 
+                                transition: 'all 0.2s', 
+                                fontWeight: 500 
+                              }}
+                            >
+                              {slot.time_slot}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <button 
+                type="submit"
+                className="btn btn-primary reveal-up" 
+                disabled={submitting || !selectedTimeSlot}
+                style={{ 
+                  width: '100%', 
+                  opacity: selectedTimeSlot ? 1 : 0.5, 
+                  pointerEvents: selectedTimeSlot ? 'auto' : 'none', 
+                  padding: '1.2rem' 
+                }}
+              >
+                {submitting ? 'Initiating...' : 'Confirm Schedule'}
+              </button>
             </form>
-          </div>
-
-          {/* Step 2: Time */}
-          <div className="reveal-up" style={{ marginBottom: '4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>2</div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Select Availability</h3>
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', padding: '0.4rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-              <button onClick={() => setMeetingType('online')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'online' ? 'var(--text-white)' : 'transparent', color: meetingType === 'online' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>Remote</button>
-              <button onClick={() => setMeetingType('inperson')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'inperson' ? 'var(--text-white)' : 'transparent', color: meetingType === 'inperson' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>On-site</button>
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '2rem', scrollbarWidth: 'none' }}>
-              {availableDates.map((date, idx) => {
-                const isSelected = selectedDate === idx;
-                return (
-                  <button key={idx} onClick={() => setSelectedDate(idx)} style={{ minWidth: '80px', padding: '1rem 0', borderRadius: '12px', border: `1px solid ${isSelected ? 'var(--primary-orange)' : 'var(--border-color)'}`, background: isSelected ? 'rgba(231,73,4,0.1)' : 'transparent', color: isSelected ? 'var(--primary-orange)' : 'var(--text-white)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s' }}>
-                    <span style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
-                    <span style={{ fontSize: '1.4rem', fontWeight: 500 }}>{date.getDate()}</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            <div style={{ opacity: selectedDate !== null ? 1 : 0.3, pointerEvents: selectedDate !== null ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
-                {availableTimes.map((time, idx) => (
-                  <button key={idx} onClick={() => setSelectedTime(idx)} style={{ padding: '1.2rem', borderRadius: '12px', border: `1px solid ${selectedTime === idx ? 'var(--primary-orange)' : 'var(--border-color)'}`, background: selectedTime === idx ? 'var(--primary-orange)' : 'transparent', color: 'var(--text-white)', cursor: 'pointer', transition: 'all 0.2s', fontWeight: 500 }}>
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <button className="btn btn-primary reveal-up" style={{ width: '100%', opacity: (selectedDate !== null && selectedTime !== null) ? 1 : 0.5, pointerEvents: (selectedDate !== null && selectedTime !== null) ? 'auto' : 'none', padding: '1.2rem' }}>
-            Confirm Schedule
-          </button>
+          )}
 
         </div>
       </div>
