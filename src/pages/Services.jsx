@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Minus, ArrowRight, ArrowLeft, Check, Calendar } from 'lucide-react';
+import { Plus, Minus, ArrowRight, ArrowLeft, Calendar } from 'lucide-react';
 
 const SERVICES_DATA = [
   {
@@ -118,15 +118,13 @@ const STOPS = [
 
 const easeIO = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
-const FeatureCardItem = ({ title, desc }) => {
+const FeatureTextItem = ({ title, desc }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className={`feature-item ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+    <div className="feature-item" onClick={() => setIsOpen(!isOpen)}>
       <div className="feature-item-header">
         <div className="feature-item-title">
-          <div className="feature-item-icon">
-            <Check size={13} />
-          </div>
+          <span className="bullet"></span>
           <span>{title}</span>
         </div>
         {isOpen ? <Minus size={15} className="text-orange" /> : <Plus size={15} style={{ color: 'var(--text-grey)' }} />}
@@ -254,7 +252,7 @@ const Services = () => {
 
               <div className="feature-list">
                 {srv.features.map((ft, idx) => (
-                  <FeatureCardItem key={idx} title={ft.title} desc={ft.desc} />
+                  <FeatureTextItem key={idx} title={ft.title} desc={ft.desc} />
                 ))}
               </div>
 
