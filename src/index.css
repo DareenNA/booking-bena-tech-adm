@@ -126,7 +126,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 #cube {
-  --s: min(62vw, 62vh, 480px);
+  --s: min(60vw, 60vh, 460px);
   width: var(--s);
   height: var(--s);
   position: relative;
@@ -142,9 +142,12 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   backface-visibility: hidden;
   border: 1px solid rgba(255, 85, 0, 0.4);
-  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(255, 85, 0, 0.2);
-  border-radius: 24px;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 85, 0, 0.2);
+  border-radius: 20px;
   background: #08080c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .face-img-wrap {
@@ -152,57 +155,27 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
 }
 
 .face-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Full uncropped widescreen display */
   object-position: center;
-  opacity: 0.88;
-  filter: brightness(0.9) contrast(1.1);
+  border-radius: 12px;
+  opacity: 0.95;
+  filter: brightness(0.95) contrast(1.05);
 }
 
 .face-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 8, 12, 0.15) 0%, rgba(8, 8, 12, 0.8) 100%);
+  background: radial-gradient(circle at center, transparent 40%, rgba(8, 8, 12, 0.6) 100%);
   pointer-events: none;
-}
-
-.face-title-badge {
-  position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  right: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  z-index: 2;
-  pointer-events: none;
-  user-select: none;
-}
-
-.face-ph {
-  font-family: var(--font-main);
-  font-weight: 600;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  text-shadow: 0 4px 25px rgba(0,0,0,0.9);
-  line-height: 1.1;
-}
-
-.face-num-badge {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  color: var(--primary-orange);
-  background: rgba(0, 0, 0, 0.75);
-  padding: 0.4rem 0.9rem;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 85, 0, 0.35);
-  backdrop-filter: blur(8px);
 }
 
 .face[data-face="top"] {
@@ -294,36 +267,6 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 0 15px var(--primary-orange);
 }
 
-#face_caption {
-  position: fixed;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--z-ui);
-  text-align: center;
-  pointer-events: none;
-  user-select: none;
-}
-
-#face_caption_num {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: var(--primary-orange);
-  text-transform: uppercase;
-  margin-bottom: 0.2rem;
-}
-
-#face_caption_name {
-  font-family: var(--font-main);
-  font-weight: 600;
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
-  letter-spacing: -0.02em;
-  color: var(--text-white);
-  opacity: 0.9;
-  line-height: 1;
-}
-
 #cube_scroll_container {
   position: relative;
   z-index: 1;
@@ -336,10 +279,7 @@ a { color: inherit; text-decoration: none; }
   padding: 8rem 5vw;
 }
 
-/* ==================================================== */
-/* CLEAN FLOATING TYPOGRAPHY (NO CARDS / NO BOXES)      */
-/* ==================================================== */
-
+/* Floating Typography */
 .text-card {
   max-width: 32rem;
   padding: 0;
@@ -350,7 +290,7 @@ a { color: inherit; text-decoration: none; }
   -webkit-backdrop-filter: none;
   box-shadow: none;
   position: relative;
-  text-shadow: 0 4px 30px rgba(0,0,0,0.9);
+  text-shadow: 0 4px 30px rgba(0,0,0,0.95);
 }
 
 .text-card.right {
@@ -396,7 +336,7 @@ a { color: inherit; text-decoration: none; }
   color: #ffffff;
   margin-bottom: 1rem;
   font-size: clamp(2.6rem, 5vw, 3.8rem);
-  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.95);
 }
 
 .text-card .body-text {
@@ -404,7 +344,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.7;
   color: #d1d5db;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95);
 }
 
 /* Feature List (Pure Text Rows) */
@@ -517,7 +457,6 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 768px) {
   #scene_strip { display: none; }
   #cube_hud { top: 5rem; right: 1rem; }
-  #face_caption { bottom: 1.5rem; }
   #cube_scroll_container section {
     min-height: 120vh;
     padding: 6rem 1.25rem;
