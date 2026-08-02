@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Minus, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Plus, Minus, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 const SERVICES_DATA = [
   {
@@ -14,9 +14,9 @@ const SERVICES_DATA = [
     faceName: 'top',
     align: 'left',
     features: [
-      { title: 'Informational Platforms', desc: 'Clean, lightning-fast sites optimized for discovery and conversion.' },
-      { title: 'E-Commerce Infrastructure', desc: 'Custom online stores with seamless payment routing and inventory sync.' },
-      { title: 'Advanced Architecture', desc: 'Bespoke web applications built with modern React, Vite, and Cloudflare.' }
+      { title: 'Informational Platforms', desc: 'Clean, lightning-fast sites optimized for discovery, conversion, and global reach.' },
+      { title: 'E-Commerce Infrastructure', desc: 'Custom online stores with seamless payment routing, checkout UX, and inventory sync.' },
+      { title: 'Advanced Architecture', desc: 'Bespoke web applications built with modern React, Vite, and Cloudflare edge engines.' }
     ]
   },
   {
@@ -24,7 +24,7 @@ const SERVICES_DATA = [
     tag: '02 — Automation Systems',
     name: 'BUSINESS AUTOMATION',
     captionName: 'BUSINESS AUTOMATION',
-    desc: 'Eliminate repetition and manual tasks. We connect your software stack to streamline operations and unlock growth.',
+    desc: 'Eliminate repetitive manual work. We connect your software stack to streamline operations and unlock growth.',
     img: '/assets/benatech_automation_1200x600.png',
     faceIdx: 1,
     faceName: 'front',
@@ -46,7 +46,7 @@ const SERVICES_DATA = [
     faceName: 'right',
     align: 'left',
     features: [
-      { title: 'Progressive Web Apps (PWA)', desc: 'Fast, offline-ready web apps accessible on all devices.' },
+      { title: 'Progressive Web Apps (PWA)', desc: 'Fast, offline-ready web apps accessible on all devices without store friction.' },
       { title: 'Native iOS & Android', desc: 'High-performance mobile applications with custom UI and push notifications.' },
       { title: 'Unified Ecosystems', desc: 'Mobile frontends seamlessly backed by cloud APIs and Supabase databases.' }
     ]
@@ -72,7 +72,7 @@ const SERVICES_DATA = [
     tag: '05 — Artificial Intelligence',
     name: 'AI SOLUTIONS',
     captionName: 'AI SOLUTIONS',
-    desc: 'Harness cutting-edge generative AI, custom LLM integrations, and automated intelligent agents to transform your productivity.',
+    desc: 'Harness cutting-edge generative AI, custom LLM integrations, and automated intelligent agents to transform productivity.',
     img: '/assets/benatech_ai_1200x600.png',
     faceIdx: 4,
     faceName: 'left',
@@ -116,17 +116,25 @@ const ExpandableFeature = ({ title, desc }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div 
-      style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '0.9rem 0', cursor: 'pointer' }}
+      style={{
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        padding: '1rem 0',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease'
+      }}
       onClick={() => setIsOpen(!isOpen)}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h4 style={{ fontSize: '0.95rem', fontWeight: 500, color: isOpen ? 'var(--primary-orange)' : '#fff', transition: 'color 0.3s' }}>
-          {title}
-        </h4>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <CheckCircle2 size={16} style={{ color: isOpen ? 'var(--primary-orange)' : 'var(--text-grey)', flexShrink: 0 }} />
+          <h4 style={{ fontSize: '0.98rem', fontWeight: 500, color: isOpen ? 'var(--primary-orange)' : '#fff', transition: 'color 0.3s' }}>
+            {title}
+          </h4>
+        </div>
         {isOpen ? <Minus size={16} className="text-orange" /> : <Plus size={16} style={{ color: 'var(--text-grey)' }} />}
       </div>
       {isOpen && (
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-grey)', marginTop: '0.5rem', lineHeight: 1.5 }}>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-grey)', marginTop: '0.6rem', paddingLeft: '1.6rem', lineHeight: 1.6 }}>
           {desc}
         </p>
       )}
@@ -190,10 +198,16 @@ const Services = () => {
       {/* 3D Cube Canvas Background Scene */}
       <div id="cube_scene">
         <div id="cube" ref={cubeRef}>
-          {SERVICES_DATA.map((srv) => (
+          {SERVICES_DATA.map((srv, i) => (
             <div key={srv.id} className="face" data-face={srv.faceName}>
-              <img src={srv.img} alt={srv.name} />
-              <span className="face-ph">{srv.name}</span>
+              <div className="face-img-wrap">
+                <img src={srv.img} alt={srv.name} />
+              </div>
+              <div className="face-overlay"></div>
+              <div className="face-title-badge">
+                <span className="face-ph">{srv.name}</span>
+                <span className="face-num-badge">0{i + 1}</span>
+              </div>
             </div>
           ))}
         </div>
@@ -236,7 +250,7 @@ const Services = () => {
               <h2>{srv.name}</h2>
               <p className="body-text">{srv.desc}</p>
 
-              <div style={{ marginTop: '1.5rem' }}>
+              <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                 {srv.features.map((ft, idx) => (
                   <ExpandableFeature key={idx} title={ft.title} desc={ft.desc} />
                 ))}
@@ -259,7 +273,7 @@ const Services = () => {
                   </button>
                 )}
 
-                <Link to="/booking" className="cta-cube" style={{ background: 'var(--primary-orange)', color: '#000' }}>
+                <Link to="/booking" className="cta-cube" style={{ background: 'linear-gradient(135deg, #ff6600 0%, #d44000 100%)', color: '#fff', border: 'none' }}>
                   Book Meeting
                 </Link>
               </div>
