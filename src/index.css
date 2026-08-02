@@ -43,7 +43,7 @@ body {
 
 /* Typography */
 .display-1 {
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.1;
@@ -54,7 +54,7 @@ body {
 }
 
 .display-2 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1.2;
@@ -126,7 +126,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 #cube {
-  --s: min(60vw, 60vh, 460px);
+  --s: min(60vw, 60vh, 450px);
   width: var(--s);
   height: var(--s);
   position: relative;
@@ -164,7 +164,7 @@ a { color: inherit; text-decoration: none; }
 .face-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Full uncropped widescreen display */
+  object-fit: contain;
   object-position: center;
   border-radius: 12px;
   opacity: 0.95;
@@ -454,12 +454,71 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-2px);
 }
 
+/* ==================================================== */
+/* MOBILE & RESPONSIVE OPTIMIZATION                     */
+/* ==================================================== */
+
 @media (max-width: 768px) {
-  #scene_strip { display: none; }
-  #cube_hud { top: 5rem; right: 1rem; }
+  #cube_scene {
+    align-items: flex-start;
+    padding-top: 4.5rem;
+    perspective: 800px;
+  }
+
+  #cube {
+    --s: min(72vw, 32vh, 290px);
+  }
+
+  .face {
+    border-radius: 16px;
+  }
+
+  .face-img-wrap {
+    padding: 0.75rem;
+  }
+
+  #scene_strip {
+    display: none;
+  }
+
+  #cube_hud {
+    top: 4.5rem;
+    right: 1.25rem;
+    font-size: 0.65rem;
+  }
+
+  #cube_hud .progress-bar {
+    width: 5.5rem;
+  }
+
   #cube_scroll_container section {
-    min-height: 120vh;
-    padding: 6rem 1.25rem;
+    min-height: 100vh;
+    padding: 18rem 1.25rem 4rem 1.25rem;
     align-items: flex-end;
+  }
+
+  .text-card {
+    max-width: 100%;
+  }
+
+  .text-card h1, .text-card h2 {
+    font-size: clamp(2rem, 7.5vw, 2.7rem);
+  }
+
+  .text-card .body-text {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .cta-primary-btn, .cta-secondary-btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
   }
 }
