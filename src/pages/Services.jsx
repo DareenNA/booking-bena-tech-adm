@@ -194,16 +194,12 @@ const Services = () => {
       {/* 3D Cube Canvas Background Scene */}
       <div id="cube_scene">
         <div id="cube" ref={cubeRef}>
-          {SERVICES_DATA.map((srv, i) => (
+          {SERVICES_DATA.map((srv) => (
             <div key={srv.id} className="face" data-face={srv.faceName}>
               <div className="face-img-wrap">
                 <img src={srv.img} alt={srv.name} />
               </div>
               <div className="face-overlay"></div>
-              <div className="face-title-badge">
-                <span className="face-ph">{srv.name}</span>
-                <span className="face-num-badge">0{i + 1}</span>
-              </div>
             </div>
           ))}
         </div>
@@ -228,12 +224,6 @@ const Services = () => {
             title={srv.name}
           />
         ))}
-      </div>
-
-      {/* Floating Bottom Caption */}
-      <div id="face_caption">
-        <div id="face_caption_num">0{currentIdx + 1} / 06</div>
-        <div id="face_caption_name">{activeService.captionName}</div>
       </div>
 
       {/* Scroll Sections Container */}
