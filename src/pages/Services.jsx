@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Minus, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Plus, Minus, ArrowRight, ArrowLeft, Check, Calendar } from 'lucide-react';
 
 const SERVICES_DATA = [
   {
     id: 's0',
-    tag: '01 — Web Architecture',
-    name: 'WEB DEVELOPMENT',
+    num: '01',
+    tag: 'Web Architecture',
+    name: 'Web Development',
     captionName: 'WEB DEVELOPMENT',
     desc: 'Websites built to perform and endure. Clean, fast, and optimized for conversion and enterprise scalability.',
     img: '/assets/benatech_web_1200x600.png',
@@ -21,8 +22,9 @@ const SERVICES_DATA = [
   },
   {
     id: 's1',
-    tag: '02 — Automation Systems',
-    name: 'BUSINESS AUTOMATION',
+    num: '02',
+    tag: 'Automation Systems',
+    name: 'Business Automation',
     captionName: 'BUSINESS AUTOMATION',
     desc: 'Eliminate repetitive manual work. We connect your software stack to streamline operations and unlock growth.',
     img: '/assets/benatech_automation_1200x600.png',
@@ -37,8 +39,9 @@ const SERVICES_DATA = [
   },
   {
     id: 's2',
-    tag: '03 — Mobile Ecosystems',
-    name: 'MOBILE SYSTEMS',
+    num: '03',
+    tag: 'Mobile Ecosystems',
+    name: 'Mobile Systems',
     captionName: 'MOBILE SYSTEMS',
     desc: 'Native mobile experiences people actually love to use, coupled with robust admin management portals.',
     img: '/assets/benatech_mobile_1200x600.png',
@@ -53,8 +56,9 @@ const SERVICES_DATA = [
   },
   {
     id: 's3',
-    tag: '04 — Enterprise ERP',
-    name: 'ERP SYSTEMS',
+    num: '04',
+    tag: 'Enterprise ERP',
+    name: 'ERP Systems',
     captionName: 'ENTERPRISE RESOURCE PLANNING',
     desc: 'Tailored enterprise platforms connecting finance, inventory, HR, and client operations into a single source of truth.',
     img: '/assets/benatech_erp_1200x600.png',
@@ -69,8 +73,9 @@ const SERVICES_DATA = [
   },
   {
     id: 's4',
-    tag: '05 — Artificial Intelligence',
-    name: 'AI SOLUTIONS',
+    num: '05',
+    tag: 'Artificial Intelligence',
+    name: 'AI Solutions',
     captionName: 'AI SOLUTIONS',
     desc: 'Harness cutting-edge generative AI, custom LLM integrations, and automated intelligent agents to transform productivity.',
     img: '/assets/benatech_ai_1200x600.png',
@@ -85,8 +90,9 @@ const SERVICES_DATA = [
   },
   {
     id: 's5',
-    tag: '06 — Cyber Defense & Compliance',
-    name: 'SECURITY AWARENESS',
+    num: '06',
+    tag: 'Cyber Defense & Compliance',
+    name: 'Security Awareness',
     captionName: 'ANNUAL SECURITY AWARENESS PROGRAM',
     desc: 'Comprehensive annual security awareness programs to train your workforce, simulate phishing threats, and maintain compliance.',
     img: '/assets/benatech_security_1200x600.png',
@@ -112,29 +118,21 @@ const STOPS = [
 
 const easeIO = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
-const ExpandableFeature = ({ title, desc }) => {
+const FeatureCardItem = ({ title, desc }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div 
-      style={{
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '1rem 0',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease'
-      }}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <CheckCircle2 size={16} style={{ color: isOpen ? 'var(--primary-orange)' : 'var(--text-grey)', flexShrink: 0 }} />
-          <h4 style={{ fontSize: '0.98rem', fontWeight: 500, color: isOpen ? 'var(--primary-orange)' : '#fff', transition: 'color 0.3s' }}>
-            {title}
-          </h4>
+    <div className={`feature-item ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+      <div className="feature-item-header">
+        <div className="feature-item-title">
+          <div className="feature-item-icon">
+            <Check size={13} />
+          </div>
+          <span>{title}</span>
         </div>
-        {isOpen ? <Minus size={16} className="text-orange" /> : <Plus size={16} style={{ color: 'var(--text-grey)' }} />}
+        {isOpen ? <Minus size={15} className="text-orange" /> : <Plus size={15} style={{ color: 'var(--text-grey)' }} />}
       </div>
       {isOpen && (
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-grey)', marginTop: '0.6rem', paddingLeft: '1.6rem', lineHeight: 1.6 }}>
+        <p className="feature-item-desc">
           {desc}
         </p>
       )}
@@ -245,38 +243,43 @@ const Services = () => {
         {SERVICES_DATA.map((srv, i) => (
           <section key={srv.id} id={srv.id}>
             <div className={`text-card ${srv.align === 'right' ? 'right' : srv.align === 'center' ? 'center' : ''}`}>
-              <div className="h-line"></div>
-              <div className="tag">{srv.tag}</div>
+              
+              <div className="tag-badge">
+                <span className="tag-badge-dot"></span>
+                <span>{srv.num} — {srv.tag}</span>
+              </div>
+
               <h2>{srv.name}</h2>
               <p className="body-text">{srv.desc}</p>
 
-              <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+              <div className="feature-list">
                 {srv.features.map((ft, idx) => (
-                  <ExpandableFeature key={idx} title={ft.title} desc={ft.desc} />
+                  <FeatureCardItem key={idx} title={ft.title} desc={ft.desc} />
                 ))}
               </div>
 
               <div className="cta-row">
                 {i > 0 && (
-                  <button className="cta-back-cube" onClick={() => scrollToSection(i - 1)}>
-                    <ArrowLeft size={14} /> Back
+                  <button className="cta-secondary-btn" onClick={() => scrollToSection(i - 1)}>
+                    <ArrowLeft size={15} /> Back
                   </button>
                 )}
                 
                 {i < SERVICES_DATA.length - 1 ? (
-                  <button className="cta-cube" onClick={() => scrollToSection(i + 1)}>
-                    Turn <ArrowRight size={14} />
+                  <button className="cta-secondary-btn" onClick={() => scrollToSection(i + 1)}>
+                    Turn <ArrowRight size={15} />
                   </button>
                 ) : (
-                  <button className="cta-cube" onClick={() => scrollToSection(0)}>
-                    Restart <ArrowRight size={14} />
+                  <button className="cta-secondary-btn" onClick={() => scrollToSection(0)}>
+                    Restart <ArrowRight size={15} />
                   </button>
                 )}
 
-                <Link to="/booking" className="cta-cube" style={{ background: 'linear-gradient(135deg, #ff6600 0%, #d44000 100%)', color: '#fff', border: 'none' }}>
-                  Book Meeting
+                <Link to="/booking" className="cta-primary-btn">
+                  <Calendar size={15} /> Book Meeting
                 </Link>
               </div>
+
             </div>
           </section>
         ))}
